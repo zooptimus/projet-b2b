@@ -1,0 +1,29 @@
+server:
+  port: 9090
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/jwt-security
+    username: postgres
+    password: sa
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+      show-sql: true
+    properties:
+      hibernate:
+        format-sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+application:
+  security:
+    jwt:
+      secret-key: 432646294A404E635266556A586E327235753878214125442A472D4B61506453
+      expiration: 86400000 # a day
+      refresh-token:
+        expiration: 604800000 # 7 days
+
+
+
+
