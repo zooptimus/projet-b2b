@@ -23,15 +23,12 @@ import java.util.List;
 )
 
 @Data
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="type_utilisateur",
-        discriminatorType = DiscriminatorType.STRING)
 public class Utilisateur implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer userId;
-    private String email;
 
+    private String email;
     private String password;
 
     @Enumerated(EnumType.STRING)
