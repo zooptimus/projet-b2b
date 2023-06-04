@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,25 +37,32 @@ public class AuthenticationService {
             .password(passwordEncoder.encode(request.getPassword()))
             .role(request.getRole())
             .build();
-    var savedUser = repository.save(user);
-    var jwtToken = jwtService.generateToken(user);
-    var refreshToken = jwtService.generateRefreshToken(user);
-    saveUserToken(savedUser, jwtToken);
-    return AuthenticationResponse.builder()
-        .accessToken(jwtToken)
-            .refreshToken(refreshToken)
-        .build();
+    Optional<Utilisateur> optUser = repository.findByEmail(user.getEmail());
+    if(optUser.isEmpty()) {
+      var savedUser = repository.save(user);
+      var jwtToken = jwtService.generateToken(user);
+      var refreshToken = jwtService.generateRefreshToken(user);
+      saveUserToken(savedUser, jwtToken);
+      return AuthenticationResponse.builder()
+              .accessToken(jwtToken)
+              .refreshToken(refreshToken)
+              .build();
+    }
+
+    return new AuthenticationResponse();
+
   }
 
-  public AuthenticationResponse authenticate(AuthenticationRequest request) {
+  public AuthenticationResponse authenticate(AuthenticationRequest request){
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(
             request.getEmail(),
             request.getPassword()
         )
     );
+
     var user = repository.findByEmail(request.getEmail())
-        .orElseThrow();
+            .orElseThrow();
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);
     revokeAllUserTokens(user);

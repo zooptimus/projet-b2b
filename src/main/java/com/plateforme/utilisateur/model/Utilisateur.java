@@ -3,9 +3,9 @@ package com.plateforme.utilisateur.model;
 import com.plateforme.utilisateur.model.token.Token;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,21 +13,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(
+        uniqueConstraints=
+        @UniqueConstraint(columnNames={"email"})
+)
+
 @Data
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="type_utilisateur",
-        discriminatorType = DiscriminatorType.STRING)
 public class Utilisateur implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer userId;
 
     private String email;
-
     private String password;
 
     @Enumerated(EnumType.STRING)
