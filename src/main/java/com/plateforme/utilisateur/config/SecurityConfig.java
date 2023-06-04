@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig  {
 
     private final AuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
@@ -36,10 +36,6 @@ public class SecurityConfig {
                     logout.logoutUrl("/api/v1/auth/logout");
                     logout.logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext());
                 })
-
-                /*.oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt
-                                .jwtAuthenticationConverter(myConverter()))*/
                 .build();
     }
 }
